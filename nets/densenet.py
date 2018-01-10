@@ -117,7 +117,11 @@ def densenet(images, num_classes=1001, is_training=False,
             with tf.variable_scope('Logits'):
                 #7x7x128
                 net=slim.avg_pool2d(net,[7,7],padding='VALID',scope='AvgPool_3a_7x7')
+                #1x1x128
                 end_points['AvgPool_4a_7x7'] = net
+                net = slim.flatten(net, scope='PreLogitsFlatten')
+                end_points['PreLogitsFlatten'] = net
+                #128
                 logits = slim.fully_connected(net, num_classes, activation_fn=None,scope='Logits')
                 end_points['Logits'] = logits
                 end_points['Predictions'] = tf.nn.softmax(logits, name='Predictions')
